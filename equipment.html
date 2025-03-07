@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Booking</title>
-    <link rel="stylesheet" href="https://unpkg.com/fullcalendar@5.11.3/main.min.js">
-    <script src="https://unpkg.com/fullcalendar@5.11.3/main.min.js"></script>
+
+    <!-- FullCalendar CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+
     <style>
         body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
         h1 { color: #333; }
@@ -23,22 +28,38 @@
         const urlParams = new URLSearchParams(window.location.search);
         const equipmentId = urlParams.get('id') || '1';
 
-        // Update page title
+        console.log(`Equipment ID: ${equipmentId}`);
         document.getElementById('equipment-title').innerText = `Equipment ${equipmentId} Booking`;
 
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
-            var storageKey = `bookings_equipment_${equipmentId}`; // Unique storage per equipment
+            if (!calendarEl) {
+                console.error('Calendar element not found!');
+                return;
+            }
+
+            var storageKey = `bookings_equipment_${equipmentId}`;
+            var existingBookings = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            console.log('Existing bookings:', existingBookings);
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                initialView: 'timeGridWeek', // Weekly view with hours
                 selectable: true,
                 editable: true,
-                events: JSON.parse(localStorage.getItem(storageKey) || '[]'),
+                events: existingBookings, // Load existing bookings from localStorage
+                slotDuration: '00:30:00', // 30-minute slots for booking
+                allDaySlot: false, // Disable all-day events
+                minTime: '08:00:00', // Start time for booking (8 AM)
+                maxTime: '20:00:00', // End time for booking (8 PM)
                 dateClick: function(info) {
                     let userName = prompt('Enter your name to book:');
                     if (userName) {
-                        let newEvent = { title: userName, start: info.dateStr };
+                        let newEvent = { 
+                            title: userName, 
+                            start: info.dateStr, 
+                            end: info.dateStr, // Same start and end time for hourly booking
+                            allDay: false
+                        };
                         let bookings = JSON.parse(localStorage.getItem(storageKey) || '[]');
                         bookings.push(newEvent);
                         localStorage.setItem(storageKey, JSON.stringify(bookings));
