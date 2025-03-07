@@ -16,14 +16,24 @@
         h1 { color: #333; }
         #calendar { max-width: 900px; margin: auto; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
         .back { margin-top: 20px; display: inline-block; text-decoration: none; color: #007BFF; font-weight: bold; }
+        .clear-btn { margin-top: 20px; display: inline-block; text-decoration: none; background-color: red; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: not-allowed; }
+        .clear-btn.active { cursor: pointer; }
+        .clear-btn:hover { background-color: darkred; }
     </style>
 </head>
 <body>
     <h1 id="equipment-title">Equipment Booking</h1>
     <div id="calendar"></div>
+    
+    <!-- Clear Bookings Button -->
+    <a class="clear-btn" href="#" id="clearBookings">Clear All Bookings</a>
+
     <a class="back" href="index.html">← Back to Equipment List</a>
 
     <script>
+        // Admin password (this is just for demonstration purposes)
+        const adminPassword = 'admin123'; // Set the password for admin
+
         // Get the equipment number from URL (e.g., ?id=1)
         const urlParams = new URLSearchParams(window.location.search);
         const equipmentId = urlParams.get('id') || '1';
@@ -68,6 +78,38 @@
                 }
             });
             calendar.render();
+
+            // Admin authentication for clearing bookings
+            function authenticateAdmin() {
+                var password = prompt('Enter the admin password to clear all bookings:');
+                if (password === adminPassword) {
+                    // Enable the "Clear All Bookings" button
+                    document.getElementById('clearBookings').classList.add('active');
+                } else {
+                    alert('Incorrect password! Only the admin can clear bookings.');
+                }
+            }
+
+            // Clear bookings button click handler
+            document.getElementById('clearBookings').addEventListener('click', function(e) {
+                if (!this.classList.contains('active')) {
+                    // Admin is not authenticated, prevent action
+                    alert('You need admin privileges to clear bookings.');
+                    return;
+                }
+
+                e.preventDefault();
+                if (confirm("Are you sure you want to clear all bookings for this equipment?")) {
+                    // Clear the bookings from localStorage
+                    localStorage.removeItem(storageKey);
+                    // Refresh the calendar with no events
+                    calendar.removeAllEvents();
+                    alert('All bookings have been cleared!');
+                }
+            });
+
+            // Ask for admin password on page load
+            authenticateAdmin();
         });
     </script>
 </body>
