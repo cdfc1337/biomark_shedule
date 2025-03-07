@@ -1,0 +1,30 @@
+<!-- index.html (Homepage) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biomark Equipment Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        .container { width: 80%; margin: auto; }
+        .equipment-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .equipment { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+        a { text-decoration: none; color: black; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Biomark Equipment Booking</h1>
+    <div class="container">
+        <div class="equipment-list">
+            <!-- Generate 31 equipment links dynamically -->
+            <script>
+                for (let i = 1; i <= 31; i++) {
+                    document.write(`<div class='equipment'><a href='equipment.html?id=${i}'>Equipment ${i}</a></div>`);
+                }
+            </script>
+        </div>
+    </div>
+</body>
+</html>
