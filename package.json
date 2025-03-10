@@ -13,4 +13,9 @@
     "react-scripts": "^4.0.3"
   },
   "devDependencies": {}
+
+  },
+  "engines": {
+  "node": "16.x"
+}
 }
