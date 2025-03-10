@@ -1,10 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
 
-ReactDOM.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
-    document.getElementById("root") // Make sure this ID matches the one in `index.html`
-);
+const App = () => {
+    return (
+        <div>
+            <h1>Welcome to the Equipment Booking App</h1>
+        </div>
+    );
+};
+
+export default App;  // ✅ Ensure `App` is exported as default
