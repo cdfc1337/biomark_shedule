@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config(); // Load environment variables
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
@@ -15,5 +15,5 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on https://biomark-shedule.onrender.com`);
+  console.log(`Server running on https://biomark-shedule.onrender.com:${PORT}`);
 });
