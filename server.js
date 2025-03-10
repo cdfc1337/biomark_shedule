@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config(); // Load environment variables
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
