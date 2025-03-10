@@ -36,56 +36,57 @@
 
         document.getElementById('equipment-title').innerText = `Equipment ${equipmentId} Booking`;
 
-        // Get bookings from the server
-        fetch(`https://celadon-starburst-e57f6f.netlify.app/bookings/${equipmentId}`)
-            .then(response => response.json())
-            .then(bookings => {
-                const calendarEl = document.getElementById('calendar');
+		fetch(`https://celadon-starburst-e57f6f.netlify.app/bookings/${equipmentId}`)
+			.then(response => response.json())
+			.then(bookings => {
+				const calendarEl = document.getElementById('calendar');
+				const calendar = new FullCalendar.Calendar(calendarEl, {
+					initialView: 'timeGridWeek',
+					selectable: true,
+					editable: true,
+					events: bookings.length ? bookings.map(booking => ({
+						title: booking.userName,
+						start: booking.startTime,
+						end: booking.endTime,
+					})) : [],  // If no bookings, pass an empty array
+					slotDuration: '00:30:00', // 30-minute slots for booking
+					allDaySlot: false, // Disable all-day events
+					minTime: '08:00:00', // Start time for booking (8 AM)
+					maxTime: '20:00:00', // End time for booking (8 PM)
+					dateClick: function(info) {
+						let userName = prompt('Enter your name to book:');
+						if (userName) {
+							const newBooking = {
+								equipmentId,
+								userName,
+								startTime: info.dateStr,
+								endTime: info.dateStr, // Same start and end time for hourly booking
+							};
 
-                const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'timeGridWeek',
-                    selectable: true,
-                    editable: true,
-                    events: bookings.map(booking => ({
-                        title: booking.userName,
-                        start: booking.startTime,
-                        end: booking.endTime,
-                    })),
-                    slotDuration: '00:30:00', // 30-minute slots for booking
-                    allDaySlot: false, // Disable all-day events
-                    minTime: '08:00:00', // Start time for booking (8 AM)
-                    maxTime: '20:00:00', // End time for booking (8 PM)
-                    dateClick: function(info) {
-                        let userName = prompt('Enter your name to book:');
-                        if (userName) {
-                            const newBooking = {
-                                equipmentId,
-                                userName,
-                                startTime: info.dateStr,
-                                endTime: info.dateStr, // Same start and end time for hourly booking
-                            };
+							fetch('https://celadon-starburst-e57f6f.netlify.app/bookings', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+								},
+								body: JSON.stringify(newBooking),
+							}).then(() => {
+								calendar.addEvent({
+									title: userName,
+									start: info.dateStr,
+									end: info.dateStr,
+									allDay: false,
+								});
+							});
+						}
+					}
+				});
 
-                            fetch('https://celadon-starburst-e57f6f.netlify.app/bookings', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(newBooking),
-                            }).then(() => {
-                                calendar.addEvent({
-                                    title: userName,
-                                    start: info.dateStr,
-                                    end: info.dateStr,
-                                    allDay: false,
-                                });
-                            });
-                        }
-                    }
-                });
-
-                calendar.render();
-            })
-            .catch(error => console.error('Error fetching bookings:', error));
+				calendar.render();
+			})
+			.catch(error => {
+				console.error('Error fetching bookings:', error);
+				alert('Failed to load bookings. Please try again later.');
+			});
 
         // Clear bookings button click handler
         document.getElementById('clearBookings').addEventListener('click', function(e) {
