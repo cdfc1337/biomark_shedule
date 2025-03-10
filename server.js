@@ -1,57 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+require('dotenv').config(); // Load environment variables
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
-
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/equipmentBooking', {
+// Connect to MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
-
-// Booking Schema
-const bookingSchema = new mongoose.Schema({
-  equipmentId: Number,
-  userName: String,
-  startTime: Date,
-  endTime: Date,
-});
-
-// Booking Model
-const Booking = mongoose.model('Booking', bookingSchema);
-
-// Routes
-
-// Get all bookings for an equipment
-app.get('/bookings/:equipmentId', async (req, res) => {
-  const { equipmentId } = req.params;
-  const bookings = await Booking.find({ equipmentId });
-  res.json(bookings);
-});
-
-// Create a new booking
-app.post('/bookings', async (req, res) => {
-  const { equipmentId, userName, startTime, endTime } = req.body;
-  const newBooking = new Booking({ equipmentId, userName, startTime, endTime });
-  await newBooking.save();
-  res.status(201).json(newBooking);
-});
-
-// Clear all bookings for an equipment
-app.delete('/bookings/:equipmentId', async (req, res) => {
-  const { equipmentId } = req.params;
-  await Booking.deleteMany({ equipmentId });
-  res.status(200).send('All bookings cleared!');
-});
+})
+.then(() => console.log("Connected to MongoDB Atlas"))
+.catch(err => console.error("MongoDB Connection Error:", err));
 
 // Start server
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
