@@ -62,21 +62,20 @@
                 endTime
             };
         
-            fetch(`https://biomark-shedule.onrender.com/bookings`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bookingData)
+            fetch('https://biomark-shedule.onrender.com/bookings', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(bookingData)
             })
-            .then(async (response) => {
-                const text = await response.text();  // Read response as text
-                console.log("Raw Response:", text);  // Log it
-                return JSON.parse(text);  // Try to parse as JSON
+            .then(response => response.json())
+            .then(data => {
+              console.log('Booking successful:', data);
             })
-            .then(() => {
-                alert('Booking successful!');
-                calendar.refetchEvents();
-            })
-            .catch(err => console.error('Booking failed:', err));
+            .catch(err => {
+              console.error('Booking failed:', err);
+            });
         }
     </script>
 
