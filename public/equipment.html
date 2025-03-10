@@ -7,154 +7,73 @@
 
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
-
-    <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        #calendar {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        }
-
-        .booking-form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
-            margin: 20px auto;
-            width: 60%;
-        }
-
-        .back {
-            margin-top: 20px;
-            display: inline-block;
-            text-decoration: none;
-            color: #007BFF;
-            font-weight: bold;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; }
+        h1 { color: #333; }
+        #calendar { max-width: 900px; margin: auto; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+        .back { margin-top: 20px; display: inline-block; text-decoration: none; color: #007BFF; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <h1>Book Equipment for the Week</h1>
-
     <div id="calendar"></div>
-
-    <!-- Booking Form (hidden initially) -->
-    <div class="booking-form" id="bookingForm" style="display: none;">
-        <h2>Book Equipment</h2>
-        <form id="bookingFormContent">
-            <div>
-                <label for="userName">Name: </label>
-                <input type="text" id="userName" required><br><br>
-
-                <label for="bookingStartTime">Start Time: </label>
-                <input type="datetime-local" id="bookingStartTime" required><br><br>
-
-                <label for="bookingEndTime">End Time: </label>
-                <input type="datetime-local" id="bookingEndTime" required><br><br>
-
-                <button type="submit">Submit Booking</button>
-            </div>
-        </form>
-        <button onclick="closeBookingForm()">Cancel</button>
-    </div>
-
     <a class="back" href="index.html">← Back to Equipment List</a>
 
     <script>
-        // Fetching the equipment ID from the URL query string (e.g., equipment.html?id=1)
         const urlParams = new URLSearchParams(window.location.search);
         const equipmentId = urlParams.get('id') || '1';
-
         document.title = `Equipment ${equipmentId} Booking`;
 
-        // Initialize FullCalendar
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             selectable: true,
             editable: true,
             events: function(info, successCallback, failureCallback) {
-                // Fetch booking data for the selected equipment (e.g., from your API)
                 fetch(`https://biomark-shedule.onrender.com/bookings/${equipmentId}`)
                     .then(response => response.json())
                     .then(bookings => {
                         const events = bookings.map(booking => ({
-                            title: booking.userName,
+                            title: "Booked",
                             start: booking.startTime,
-                            end: booking.endTime
+                            end: booking.endTime,
+                            backgroundColor: "#ff5733",
+                            borderColor: "#ff5733",
                         }));
                         successCallback(events);
                     })
                     .catch(failureCallback);
             },
-            dateClick: function(info) {
-                // Show the booking form when a date is clicked
-                showBookingForm(info);
+            select: function(info) {
+                bookEquipment(info.startStr, info.endStr);
             }
         });
 
         calendar.render();
 
-        // Function to show the booking form
-        function showBookingForm(info) {
-            document.getElementById('bookingForm').style.display = 'block';
-            document.getElementById('bookingStartTime').value = info.dateStr;
-            document.getElementById('bookingEndTime').value = info.dateStr;
-        }
-
-        // Function to close the booking form
-        function closeBookingForm() {
-            document.getElementById('bookingForm').style.display = 'none';
-        }
-
-        // Handle form submission
-        document.getElementById('bookingFormContent').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const userName = document.getElementById('userName').value;
-            const startTime = document.getElementById('bookingStartTime').value;
-            const endTime = document.getElementById('bookingEndTime').value;
-
-            // Make a POST request to book the equipment
+        function bookEquipment(startTime, endTime) {
             const bookingData = {
                 equipmentId,
-                userName,
+                userName: "Booked",
                 startTime,
                 endTime
             };
 
             fetch(`https://biomark-shedule.onrender.com/bookings`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(bookingData)
             })
             .then(response => response.json())
             .then(() => {
                 alert('Booking successful!');
-                closeBookingForm();
-                calendar.refetchEvents(); // Refresh the calendar
+                calendar.refetchEvents();
             })
             .catch(err => console.error('Booking failed:', err));
-        });
+        }
     </script>
 
 </body>
