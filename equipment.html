@@ -37,7 +37,7 @@
         document.getElementById('equipment-title').innerText = `Equipment ${equipmentId} Booking`;
 
         // Get bookings from the server
-        fetch(`http://localhost:3000/bookings/${equipmentId}`)
+        fetch(`https://celadon-starburst-e57f6f.netlify.app/bookings/${equipmentId}`)
             .then(response => response.json())
             .then(bookings => {
                 const calendarEl = document.getElementById('calendar');
@@ -65,7 +65,7 @@
                                 endTime: info.dateStr, // Same start and end time for hourly booking
                             };
 
-                            fetch('http://localhost:3000/bookings', {
+                            fetch('https://celadon-starburst-e57f6f.netlify.app/bookings', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -92,7 +92,7 @@
             e.preventDefault();
             const password = prompt('Enter the password to clear all bookings:');
             if (password === 'password123') {
-                fetch(`http://localhost:3000/bookings/${equipmentId}`, {
+                fetch(`https://celadon-starburst-e57f6f.netlify.app/bookings/${equipmentId}`, {
                     method: 'DELETE',
                 }).then(() => {
                     alert('All bookings have been cleared!');
