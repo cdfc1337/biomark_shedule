@@ -1,12 +1,10 @@
-// src/App.js
-import React from 'react';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Welcome to My App</h1>
-    </div>
-  );
-}
-
-export default App;
+ReactDOM.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>,
+    document.getElementById("root") // Make sure this ID matches the one in `index.html`
+);
