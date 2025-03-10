@@ -6,7 +6,7 @@ dotenv.config(); // Load environment variables
 
 // Initialize the app
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // Middleware to parse JSON and enable CORS
 app.use(cors());
@@ -76,5 +76,5 @@ app.delete('/bookings/:equipmentId', async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on http://celadon-starburst-e57f6f.netlify.app:${PORT}`);
+  console.log(`Server running on http://https://biomark-shedule.onrender.com:${PORT}`);
 });
