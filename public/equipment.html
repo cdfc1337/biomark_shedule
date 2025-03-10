@@ -92,7 +92,7 @@
             editable: true,
             events: function(info, successCallback, failureCallback) {
                 // Fetch booking data for the selected equipment (e.g., from your API)
-                fetch(`https://your-backend-api.com/bookings/${equipmentId}`)
+                fetch(`https://biomark-shedule.onrender.com/bookings/${equipmentId}`)
                     .then(response => response.json())
                     .then(bookings => {
                         const events = bookings.map(booking => ({
@@ -140,7 +140,7 @@
                 endTime
             };
 
-            fetch(`https://your-backend-api.com/bookings`, {
+            fetch(`https://biomark-shedule.onrender.com/bookings`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
