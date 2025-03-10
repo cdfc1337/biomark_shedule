@@ -36,7 +36,7 @@
 
         document.getElementById('equipment-title').innerText = `Equipment ${equipmentId} Booking`;
 
-		fetch(`https://celadon-starburst-e57f6f.netlify.app/bookings/${equipmentId}`)
+		fetch(`https://biomark-shedule.onrender.com/bookings/${equipmentId}`)
 			.then(response => response.json())
 			.then(bookings => {
 				const calendarEl = document.getElementById('calendar');
@@ -63,7 +63,7 @@
 								endTime: info.dateStr, // Same start and end time for hourly booking
 							};
 
-							fetch('https://celadon-starburst-e57f6f.netlify.app/bookings', {
+							fetch('https://biomark-shedule.onrender.com/bookings', {
 								method: 'POST',
 								headers: {
 									'Content-Type': 'application/json',
@@ -93,7 +93,7 @@
             e.preventDefault();
             const password = prompt('Enter the password to clear all bookings:');
             if (password === 'password123') {
-                fetch(`https://celadon-starburst-e57f6f.netlify.app/bookings/${equipmentId}`, {
+                fetch(`https://biomark-shedule.onrender.com/bookings/${equipmentId}`, {
                     method: 'DELETE',
                 }).then(() => {
                     alert('All bookings have been cleared!');
