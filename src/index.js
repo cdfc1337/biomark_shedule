@@ -1,7 +1,9 @@
+// src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';  // Optional, if you have styles
-import App from './App';  // Ensure you have an App.js file
+import './index.css';
+import App from './App'; // This line should point to the App component correctly.
+import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -9,3 +11,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+reportWebVitals();
